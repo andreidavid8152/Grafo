@@ -119,53 +119,70 @@ public class Grafo {
     }
 
     public String dijkstra(Vertice startVertex) {
+        // Creamos un HashMap para almacenar las distancias más cortas desde el vértice de inicio a todos los demás vértices
         HashMap<Vertice, Integer> distances = new HashMap<>();
+
+        // Creamos otro HashMap para almacenar el vértice anterior en el camino más corto
         HashMap<Vertice, Vertice> previousVertices = new HashMap<>();
+
+        // Creamos una PriorityQueue para gestionar los vértices cuyas distancias más cortas aún no se han encontrado
         PriorityQueue<Vertice> queue = new PriorityQueue<>(Comparator.comparingInt(distances::get));
 
+        // Inicializamos las distancias
         for (Vertice vertex : vertices) {
-            if (vertex.equals(startVertex)) {
+            if (vertex.equals(startVertex)) { // La distancia del vértice de inicio a sí mismo es 0
                 distances.put(vertex, 0);
-            } else {
+            } else { // La distancia inicial a todos los demás vértices es infinita
                 distances.put(vertex, Integer.MAX_VALUE);
             }
-            queue.add(vertex);
+            queue.add(vertex); // Añadimos cada vértice a la cola
         }
 
+        // Ejecutamos el algoritmo de Dijkstra
         while (!queue.isEmpty()) {
+            // Sacamos el vértice con la distancia más corta desde el vértice de inicio
             Vertice currentVertex = queue.poll();
+            // Recorremos todos los bordes del vértice actual
             for (Edge edge : currentVertex.getEdges()) {
                 Vertice neighbor = edge.getFinalVertice();
+                // Calculamos la distancia del camino alternativo
                 int alternatePathDistance = distances.get(currentVertex) + edge.getWeight();
+                // Comprobamos si el camino alternativo es más corto
                 if (alternatePathDistance < distances.get(neighbor)) {
+                    // Si es así, actualizamos la distancia y el vértice anterior
                     distances.put(neighbor, alternatePathDistance);
                     previousVertices.put(neighbor, currentVertex);
+                    // Actualizamos la cola
                     queue.remove(neighbor);
                     queue.add(neighbor);
                 }
             }
         }
 
+        // Recogemos los resultados
         String result = "";
         for (Vertice vertex : vertices) {
+            // Si no hay camino a un vértice, lo indicamos en la cadena de resultado
             if (distances.get(vertex) == Integer.MAX_VALUE) {
                 result += "No hay camino de " + startVertex.getData() + " a " + vertex.getData() + "\n";
-            } else {
+            } else { // Si hay un camino, lo recogemos y lo añadimos a la cadena de resultado
                 result += "El camino más corto de " + startVertex.getData() + " a " + vertex.getData() + " es ";
                 ArrayList<Vertice> path = new ArrayList<>();
+                // Recuperamos la ruta más corta
                 for (Vertice currentVertex = vertex; currentVertex != null; currentVertex = previousVertices.get(currentVertex)) {
                     path.add(currentVertex);
                 }
-                Collections.reverse(path);
-                for (Vertice pathVertex : path) {
+                Collections.reverse(path); // Invertimos la ruta
+                for (Vertice pathVertex : path) { // Añadimos la ruta a la cadena de resultado
                     result += pathVertex.getData() + " ";
                 }
                 result += "con un peso total de " + distances.get(vertex) + "\n";
             }
         }
 
-        return result;
+        return result; // Devolvemos la cadena de resultado
     }
+
 
 
 }

@@ -148,19 +148,24 @@ public class Grafo {
 
         String result = "";
         for (Vertice vertex : vertices) {
-            result += "El camino más corto de " + startVertex.getData() + " a " + vertex.getData() + " es ";
-            ArrayList<Vertice> path = new ArrayList<>();
-            for (Vertice currentVertex = vertex; currentVertex != null; currentVertex = previousVertices.get(currentVertex)) {
-                path.add(currentVertex);
+            if (distances.get(vertex) == Integer.MAX_VALUE) {
+                result += "No hay camino de " + startVertex.getData() + " a " + vertex.getData() + "\n";
+            } else {
+                result += "El camino más corto de " + startVertex.getData() + " a " + vertex.getData() + " es ";
+                ArrayList<Vertice> path = new ArrayList<>();
+                for (Vertice currentVertex = vertex; currentVertex != null; currentVertex = previousVertices.get(currentVertex)) {
+                    path.add(currentVertex);
+                }
+                Collections.reverse(path);
+                for (Vertice pathVertex : path) {
+                    result += pathVertex.getData() + " ";
+                }
+                result += "con un peso total de " + distances.get(vertex) + "\n";
             }
-            Collections.reverse(path);
-            for (Vertice pathVertex : path) {
-                result += pathVertex.getData() + " ";
-            }
-            result += "con un peso total de " + distances.get(vertex) + "\n";
         }
 
         return result;
     }
+
 
 }

@@ -94,20 +94,27 @@ public class App extends JFrame {
     }
 
     public void quemarDatos(){
-        grafo.addVertice("A");
-        actualizarCombos("A");
-        grafo.addVertice("B");
-        actualizarCombos("B");
-        grafo.addVertice("C");
-        actualizarCombos("C");
-        grafo.addVertice("D");
-        actualizarCombos("D");
+        grafo.addVertice("1");
+        actualizarCombos("1");
+        grafo.addVertice("2");
+        actualizarCombos("2");
+        grafo.addVertice("3");
+        actualizarCombos("3");
+        grafo.addVertice("4");
+        actualizarCombos("4");
+        grafo.addVertice("5");
+        actualizarCombos("5");
 
         grafo.addEdge(grafo.getVertices().get(0).getData(), grafo.getVertices().get(1).getData(), 1);
+        grafo.addEdge(grafo.getVertices().get(0).getData(), grafo.getVertices().get(2).getData(), 1);
+
         grafo.addEdge(grafo.getVertices().get(1).getData(), grafo.getVertices().get(2).getData(), 1);
-        grafo.addEdge(grafo.getVertices().get(3).getData(), grafo.getVertices().get(1).getData(), 1);
+        grafo.addEdge(grafo.getVertices().get(1).getData(), grafo.getVertices().get(3).getData(), 1);
+
+        grafo.addEdge(grafo.getVertices().get(2).getData(), grafo.getVertices().get(4).getData(), 1);
 
         quemarButton.setEnabled(false);
+        mostrarGrafo();
     }
 
     public void mostrarGrafo(){

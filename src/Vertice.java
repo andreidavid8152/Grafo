@@ -13,19 +13,8 @@ public class Vertice {
         this.edges.add(new Edge(this, verticeFinal, weight));
     }
 
-    public void removeEdge(Vertice verticeFinal){
-        this.edges.removeIf(edge -> edge.getFinalVertice().equals(verticeFinal));
-    }
-
     public String getData(){
         return this.data;
-    }
-
-    public Vertice getVertex(String data){
-        if(this.data.equals(data)){
-            return this;
-        }
-        return null;
     }
 
     public ArrayList<Edge> getEdges(){

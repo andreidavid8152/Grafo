@@ -22,6 +22,7 @@ public class App extends JFrame {
     private JButton dijkstraButton;
     private JTextArea textArea1;
     private JComboBox comboBoxAristaFin;
+    private JButton eliminarButton;
     Grafo grafo;
 
     public App(){
@@ -74,6 +75,12 @@ public class App extends JFrame {
                 dijkstra();
             }
         });
+        eliminarButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                eliminarVertice();
+            }
+        });
     }
 
     public void crearGrafo(){
@@ -95,15 +102,15 @@ public class App extends JFrame {
 
     public void quemarDatos(){
         grafo.addVertice("1");
-        actualizarCombos("1");
+        actualizarCombos("1", true);
         grafo.addVertice("2");
-        actualizarCombos("2");
+        actualizarCombos("2", true);
         grafo.addVertice("3");
-        actualizarCombos("3");
+        actualizarCombos("3", true);
         grafo.addVertice("4");
-        actualizarCombos("4");
+        actualizarCombos("4", true);
         grafo.addVertice("5");
-        actualizarCombos("5");
+        actualizarCombos("5", true);
 
         grafo.addEdge(grafo.getVertices().get(0).getData(), grafo.getVertices().get(1).getData(), 1);
         grafo.addEdge(grafo.getVertices().get(0).getData(), grafo.getVertices().get(2).getData(), 1);
@@ -121,10 +128,18 @@ public class App extends JFrame {
         textArea1.setText(grafo.print());
     }
 
-    public void actualizarCombos(String data){
-        comboBoxAristaInicio.addItem(data);
-        comboBoxAristaFin.addItem(data);
-        comboBoxVerticeInicial.addItem(data);
+    public void actualizarCombos(String data, boolean bool){
+
+        if(bool){
+            comboBoxAristaInicio.addItem(data);
+            comboBoxAristaFin.addItem(data);
+            comboBoxVerticeInicial.addItem(data);
+        }else{
+            comboBoxAristaInicio.removeItem(data);
+            comboBoxAristaFin.removeItem(data);
+            comboBoxVerticeInicial.removeItem(data);
+        }
+
     }
 
     public void insertarVertice(){
@@ -132,8 +147,9 @@ public class App extends JFrame {
         if(!textFieldVertice.getText().isEmpty()){
             if(grafo.getVertexByValue(textFieldVertice.getText()) == null){
                 grafo.addVertice(textFieldVertice.getText());
-                actualizarCombos(textFieldVertice.getText());
+                actualizarCombos(textFieldVertice.getText(), true);
                 mostrarGrafo();
+                textFieldVertice.setText("");
                 JOptionPane.showMessageDialog(null, "Vertice insertado exitosamente");
             }else{
                 JOptionPane.showMessageDialog(null, "Error. El vertice ya ha sido creado.");
@@ -142,6 +158,22 @@ public class App extends JFrame {
             JOptionPane.showMessageDialog(null, "Error. No se puede ingresar un vertice nulo.");
         }
 
+    }
+
+    public void eliminarVertice(){
+        if(!textFieldVertice.getText().isEmpty()){
+            if(grafo.getVertexByValue(textFieldVertice.getText()) != null){
+                grafo.removeVertice(grafo.getVertexByValue(textFieldVertice.getText()));
+                actualizarCombos(textFieldVertice.getText(), false);
+                mostrarGrafo();
+                textFieldVertice.setText("");
+                JOptionPane.showMessageDialog(null, "Vertice ha sido eliminado exitosamente");
+            }else{
+                JOptionPane.showMessageDialog(null, "Error. El vertice no existe.");
+            }
+        }else{
+            JOptionPane.showMessageDialog(null, "Error. No se puede eliminar un vertice nulo.");
+        }
     }
 
     public void insertarArista(){
@@ -218,6 +250,7 @@ public class App extends JFrame {
     public void activarCampos(){
         quemarButton.setEnabled(true);
         textFieldVertice.setEnabled(true);
+        eliminarButton.setEnabled(true);
         insertarButton.setEnabled(true);
         comboBoxAristaInicio.setEnabled(true);
         comboBoxAristaFin.setEnabled(true);

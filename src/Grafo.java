@@ -28,27 +28,27 @@ public class Grafo {
         }
     }
 
-    public void removeEdge(Vertice initialVertice, Vertice finalVertice){
-        initialVertice.removeEdge(finalVertice);
-        if(!this.isDirected){
-            finalVertice.removeEdge(initialVertice);
+    public void removeVertice(Vertice vertice){
+        // Eliminar los bordes que apuntan al vértice que se va a eliminar
+        for (Vertice v : vertices) {
+            if (v != vertice) {
+                ArrayList<Edge> edgesToRemove = new ArrayList<>();
+                for (Edge edge : v.getEdges()) {
+                    if (edge.getFinalVertice() == vertice) {
+                        edgesToRemove.add(edge);
+                    }
+                }
+                v.getEdges().removeAll(edgesToRemove);
+            }
         }
+
+        // Eliminar el vértice de la lista de vértices
+        vertices.remove(vertice);
     }
 
-    public void removeVertice(Vertice vertice){
-        this.vertices.remove(vertice);
-    }
 
     public ArrayList<Vertice> getVertices() {
         return vertices;
-    }
-
-    public boolean isDirected() {
-        return isDirected;
-    }
-
-    public boolean isWeighted() {
-        return isWeighted;
     }
 
     public Vertice getVertexByValue(String value){
@@ -68,19 +68,6 @@ public class Grafo {
         }
         return grafoString;
     }
-
-    /*public String depthFirstTraversal(Vertice startVertex, ArrayList<Vertice> visitedVertices){
-        String result = "";
-        result += startVertex.getData() + "\n";
-        for(Edge e: startVertex.getEdges()){
-            Vertice vecino = e.getFinalVertice();
-            if(!visitedVertices.contains(vecino)){
-                visitedVertices.add(vecino);
-                result += depthFirstTraversal(vecino, visitedVertices);
-            }
-        }
-        return result;
-    }*/
 
     public String depthFirstTraversal(Vertice startVertex, ArrayList<Vertice> visitedVertices){
         visitedVertices.add(startVertex);
@@ -137,7 +124,6 @@ public class Grafo {
             }
             queue.add(vertex); // Añadimos cada vértice a la cola
         }
-
         // Ejecutamos el algoritmo de Dijkstra
         while (!queue.isEmpty()) {
             // Sacamos el vértice con la distancia más corta desde el vértice de inicio
@@ -166,17 +152,16 @@ public class Grafo {
             if (distances.get(vertex) == Integer.MAX_VALUE) {
                 result += "No hay camino de " + startVertex.getData() + " a " + vertex.getData() + "\n";
             } else { // Si hay un camino, lo recogemos y lo añadimos a la cadena de resultado
-                result += "El camino más corto de " + startVertex.getData() + " a " + vertex.getData() + " es ";
-                ArrayList<Vertice> path = new ArrayList<>();
+                result += "El camino más corto de " + startVertex.getData() + " a " + vertex.getData() + " es [";
+                ArrayList<String> path = new ArrayList<>();
                 // Recuperamos la ruta más corta
                 for (Vertice currentVertex = vertex; currentVertex != null; currentVertex = previousVertices.get(currentVertex)) {
-                    path.add(currentVertex);
+                    path.add(String.valueOf(currentVertex.getData()));
                 }
                 Collections.reverse(path); // Invertimos la ruta
-                for (Vertice pathVertex : path) { // Añadimos la ruta a la cadena de resultado
-                    result += pathVertex.getData() + " ";
-                }
-                result += "con un peso total de " + distances.get(vertex) + "\n";
+                // Añadimos la ruta a la cadena de resultado usando join() para conseguir el formato [1, 2]
+                result += String.join(", ", path);
+                result += "] con un peso total de " + distances.get(vertex) + "\n";
             }
         }
 
